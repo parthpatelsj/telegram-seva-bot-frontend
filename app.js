@@ -11,9 +11,17 @@ document.addEventListener('DOMContentLoaded', function () {
         sevaList.innerHTML = ''; // Clear the list before appending new items
         data.forEach(seva => {
           const li = document.createElement('li');
+          
+          // Add Seva details and Volunteer list to the list item
+          let volunteersList = seva.volunteers.length > 0 
+            ? `<strong>Volunteers:</strong> ${seva.volunteers.join(', ')}`
+            : '<strong>No volunteers yet.</strong>';
+          
           li.innerHTML = `
-            ${seva.seva_name} - ${seva.time_slot} on ${seva.date_slot} (${seva.description}) 
-            <button class="delete-btn" data-id="${seva.id}">Delete</button>`;
+            ${seva.seva_name} - ${seva.time_slot} on ${seva.date_slot} (${seva.description})
+            <br> ${volunteersList}
+            <button class="delete-btn" data-id="${seva.id}">Delete</button>
+          `;
           sevaList.appendChild(li);
         });
 
