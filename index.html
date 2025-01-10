@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RKC 2024 Reflection</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <title>2024 Reflection Mala</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -12,182 +12,365 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --bead-primary: #8B4513;
+      --bead-secondary: #D2691E;
+      --background-start: #f8f8f8;
+      --background-end: #e8e0d5;
+    }
+
     body {
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(to bottom, #f9f9f9, #e2d4c3);
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--background-start), var(--background-end));
+      min-height: 100vh;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
     }
 
     .container {
       position: relative;
-      width: 400px;
-      height: 400px;
-      background-color: #fff;
-      border-radius: 50%;
+      width: 100vw;
+      height: 100vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      justify-content: center;
     }
 
     .profile {
       position: absolute;
-      text-align: center;
+      top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeInDown 1s ease forwards;
     }
 
     .profile img {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 8px;
+      border: 3px solid white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
 
     .profile h2 {
       font-size: 18px;
+      font-weight: 500;
       color: #333;
-      margin: 0;
+    }
+
+    .mala-container {
+      position: relative;
+      width: 360px;
+      height: 360px;
+      transform-style: preserve-3d;
+      perspective: 1000px;
     }
 
     .mala {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      animation: rotate 20s linear infinite;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: gentleFloat 20s infinite ease-in-out;
     }
 
     .bead {
       position: absolute;
-      width: 40px;
-      height: 40px;
-      background: radial-gradient(circle, #8B4513, #5a2e15);
-      border: 2px solid #D2691E;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
+      background: var(--bead-primary);
       cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       overflow: hidden;
+    }
+
+    .bead::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .bead::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 70% 70%, var(--bead-secondary) 0%, var(--bead-primary) 100%);
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+    }
+
+    .bead.active {
+      transform: scale(1.2) translateZ(20px);
+      box-shadow: 0 8px 32px rgba(139, 69, 19, 0.3);
+    }
+
+    .bead.active::after {
+      opacity: 0;
     }
 
     .bead img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.5s ease;
     }
 
-    .bead[data-type="small"] {
-      width: 20px;
-      height: 20px;
+    .bead.loaded img {
+      opacity: 1;
     }
 
-    .bead[data-type="large"] {
-      width: 60px;
-      height: 60px;
-    }
-
-    .upload {
+    .reflection-card {
       position: absolute;
-      bottom: -60px;
-      text-align: center;
+      bottom: 80px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      max-width: 300px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(8px);
     }
 
-    .upload input {
+    .reflection-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reflection-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .reflection-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #666;
+    }
+
+    .upload-button {
+      position: absolute;
+      bottom: 40px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 24px;
+      border-radius: 24px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .upload-button input {
       display: none;
     }
 
-    .upload label {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #007aff;
-      color: white;
-      font-size: 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .upload label:hover {
-      background-color: #005eb8;
-    }
-
-    @keyframes rotate {
-      from {
-        transform: rotate(0deg);
+    @keyframes gentleFloat {
+      0%, 100% {
+        transform: rotate(0deg) translateY(0);
       }
+      25% {
+        transform: rotate(3deg) translateY(-10px);
+      }
+      75% {
+        transform: rotate(-3deg) translateY(10px);
+      }
+    }
+
+    @keyframes fadeInDown {
       to {
-        transform: rotate(360deg);
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
-    .bead[data-index="0"] { top: 0; left: 50%; transform: translate(-50%, -50%); }
-    .bead[data-index="1"][data-type="small"] { top: 15%; left: 75%; transform: translate(-50%, -50%); }
-    .bead[data-index="2"] { top: 50%; left: 100%; transform: translate(-50%, -50%); }
-    .bead[data-index="3"][data-type="large"] { top: 85%; left: 75%; transform: translate(-50%, -50%); }
-    .bead[data-index="4"] { top: 100%; left: 50%; transform: translate(-50%, -50%); }
-    .bead[data-index="5"][data-type="small"] { top: 85%; left: 25%; transform: translate(-50%, -50%); }
-    .bead[data-index="6"] { top: 50%; left: 0%; transform: translate(-50%, -50%); }
-    .bead[data-index="7"][data-type="large"] { top: 15%; left: 25%; transform: translate(-50%, -50%); }
+    .connecting-thread {
+      position: absolute;
+      background: var(--bead-secondary);
+      height: 2px;
+      transform-origin: left center;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(139, 69, 19, 0.2);
+      transform: scale(0);
+      animation: rippleEffect 1s ease-out;
+    }
+
+    @keyframes rippleEffect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="profile">
-      <img id="profile-pic" src="https://via.placeholder.com/80" alt="Profile Picture">
-      <h2 id="user-name">Your Name</h2>
+      <img id="profile-pic" src="/api/placeholder/60/60" alt="Profile">
+      <h2 id="user-name">Your 2024 Journey</h2>
     </div>
-    <div class="mala" id="mala">
-      <div class="bead" data-index="0"></div>
-      <div class="bead" data-index="1" data-type="small"></div>
-      <div class="bead" data-index="2"></div>
-      <div class="bead" data-index="3" data-type="large"></div>
-      <div class="bead" data-index="4"></div>
-      <div class="bead" data-index="5" data-type="small"></div>
-      <div class="bead" data-index="6"></div>
-      <div class="bead" data-index="7" data-type="large"></div>
+
+    <div class="mala-container">
+      <div class="mala" id="mala"></div>
     </div>
-    <div class="upload">
+
+    <div class="reflection-card" id="reflection-card">
+      <h3 class="reflection-title">Moment of Reflection</h3>
+      <p class="reflection-text" id="reflection-text"></p>
+    </div>
+
+    <label class="upload-button">
+      Share Your Moments
       <input type="file" id="upload-input" multiple accept="image/*">
-      <label for="upload-input">Upload Pictures</label>
-    </div>
+    </label>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const telegram = window.Telegram.WebApp;
       const user = telegram.initDataUnsafe?.user || {};
-
-      const userNameElement = document.getElementById('user-name');
-      const profilePicElement = document.getElementById('profile-pic');
-
-      if (user) {
-        userNameElement.textContent = user.first_name || "Your Name";
-        profilePicElement.src = user.photo_url || "https://via.placeholder.com/80";
+      
+      // Initialize user data
+      document.getElementById('user-name').textContent = 
+        (user.first_name ? `${user.first_name}'s ` : '') + '2024 Journey';
+      const profilePic = document.getElementById('profile-pic');
+      if (user.photo_url) {
+        profilePic.src = user.photo_url;
       }
 
-      const uploadInput = document.getElementById('upload-input');
+      // Create mala beads
       const mala = document.getElementById('mala');
+      const numBeads = 8;
+      const radius = 160;
+      const reflections = [
+        "A moment of joy that changed everything...",
+        "When strength emerged from challenge...",
+        "The unexpected turn that led to growth...",
+        "A connection that transformed perspective...",
+        "The quiet victory worth celebrating...",
+        "When wisdom came from patience...",
+        "The breakthrough that sparked change...",
+        "A dream that became reality..."
+      ];
 
+      // Create and position beads in a circle
+      for (let i = 0; i < numBeads; i++) {
+        const angle = (i / numBeads) * 2 * Math.PI;
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        
+        const bead = document.createElement('div');
+        bead.className = 'bead';
+        bead.style.left = `${x + radius - 22}px`;
+        bead.style.top = `${y + radius - 22}px`;
+        
+        // Add interaction effects
+        bead.addEventListener('click', (e) => {
+          // Remove active class from all beads
+          document.querySelectorAll('.bead').forEach(b => b.classList.remove('active'));
+          
+          // Add active class to clicked bead
+          bead.classList.add('active');
+          
+          // Create ripple effect
+          const ripple = document.createElement('div');
+          ripple.className = 'ripple';
+          ripple.style.width = ripple.style.height = '44px';
+          ripple.style.left = `${x + radius - 22}px`;
+          ripple.style.top = `${y + radius - 22}px`;
+          mala.appendChild(ripple);
+          
+          // Remove ripple after animation
+          setTimeout(() => ripple.remove(), 1000);
+          
+          // Show reflection
+          const reflectionCard = document.getElementById('reflection-card');
+          const reflectionText = document.getElementById('reflection-text');
+          reflectionText.textContent = reflections[i];
+          reflectionCard.classList.add('visible');
+        });
+
+        mala.appendChild(bead);
+
+        // Create connecting thread if not last bead
+        if (i < numBeads - 1) {
+          const nextAngle = ((i + 1) / numBeads) * 2 * Math.PI;
+          const nextX = radius * Math.cos(nextAngle) + radius;
+          const nextY = radius * Math.sin(nextAngle) + radius;
+          
+          const thread = document.createElement('div');
+          thread.className = 'connecting-thread';
+          
+          const length = Math.sqrt(
+            Math.pow(nextX - (x + radius), 2) + 
+            Math.pow(nextY - (y + radius), 2)
+          );
+          
+          const angle = Math.atan2(
+            nextY - (y + radius),
+            nextX - (x + radius)
+          );
+          
+          thread.style.width = `${length}px`;
+          thread.style.left = `${x + radius}px`;
+          thread.style.top = `${y + radius}px`;
+          thread.style.transform = `rotate(${angle}rad)`;
+          
+          mala.appendChild(thread);
+        }
+      }
+
+      // Handle file uploads
+      const uploadInput = document.getElementById('upload-input');
       uploadInput.addEventListener('change', (event) => {
-        const files = Array.from(event.target.files).slice(0, 5); // Limit to 5 files
-        const beads = mala.querySelectorAll('.bead');
-
-        beads.forEach((bead, index) => {
-          if (files[index]) {
+        const files = Array.from(event.target.files).slice(0, numBeads);
+        const beads = document.querySelectorAll('.bead');
+        
+        files.forEach((file, index) => {
+          if (beads[index]) {
             const reader = new FileReader();
             reader.onload = (e) => {
-              bead.innerHTML = `<img src="${e.target.result}" alt="Picture">`;
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.alt = `Reflection ${index + 1}`;
+              beads[index].innerHTML = '';
+              beads[index].appendChild(img);
+              beads[index].classList.add('loaded');
             };
-            reader.readAsDataURL(files[index]);
-          } else {
-            bead.innerHTML = '';
+            reader.readAsDataURL(file);
           }
         });
       });
