@@ -144,12 +144,13 @@
     .bead[data-index="6"] { top: 50%; left: 0; transform: translate(-50%, -50%); }
     .bead[data-index="7"] { top: 15%; left: 15%; transform: translate(-50%, -50%); }
   </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="profile">
-      <img src="https://via.placeholder.com/80" alt="Profile Picture">
-      <h2>Your Name</h2>
+      <img id="profile-pic" src="https://via.placeholder.com/80" alt="Profile Picture">
+      <h2 id="user-name">Your Name</h2>
     </div>
     <div class="mala">
       <div class="bead" data-index="0" title="January">Jan</div>
@@ -169,23 +170,38 @@
   </div>
 
   <script>
-    const beads = document.querySelectorAll('.bead');
-    const prompt = document.getElementById('reflectionPrompt');
-    const promptText = document.getElementById('promptText');
-    const reflectionInput = document.getElementById('reflectionInput');
+    document.addEventListener('DOMContentLoaded', () => {
+      const telegram = window.Telegram.WebApp;
+      const user = telegram.initDataUnsafe?.user || {};
 
-    beads.forEach((bead, index) => {
-      bead.addEventListener('click', () => {
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August"];
-        prompt.style.display = 'block';
-        promptText.textContent = `Reflect on ${monthNames[index]}`;
+      const userNameElement = document.getElementById('user-name');
+      const profilePicElement = document.getElementById('profile-pic');
+
+      if (user) {
+        userNameElement.textContent = user.first_name || "Your Name";
+        profilePicElement.src = user.photo_url || "https://via.placeholder.com/80";
+      }
+
+      const beads = document.querySelectorAll('.bead');
+      const prompt = document.getElementById('reflectionPrompt');
+      const promptText = document.getElementById('promptText');
+      const reflectionInput = document.getElementById('reflectionInput');
+
+      beads.forEach((bead, index) => {
+        bead.addEventListener('click', () => {
+          const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August"];
+          prompt.style.display = 'block';
+          promptText.textContent = `Reflect on ${monthNames[index]}`;
+        });
       });
-    });
 
-    document.getElementById('saveReflection').addEventListener('click', () => {
-      alert(`Reflection saved: ${reflectionInput.value}`);
-      reflectionInput.value = '';
-      prompt.style.display = 'none';
+      document.getElementById('saveReflection').addEventListener('click', () => {
+        alert(`Reflection saved: ${reflectionInput.value}`);
+        reflectionInput.value = '';
+        prompt.style.display = 'none';
+      });
+
+      telegram.expand();
     });
   </script>
 </body>
