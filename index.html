@@ -3,27 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seva Bot</title>
+  <title>Telegram Mini App</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script defer src="app.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .profile {
+      margin-bottom: 20px;
+    }
+
+    .profile img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile h2 {
+      margin-top: 15px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .profile p {
+      font-size: 16px;
+      color: #555;
+    }
+
+    .button {
+      margin-top: 20px;
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      background-color: #007aff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #005eb8;
+    }
+  </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>Seva Slots</h1>
-    <ul id="seva-list" class="seva-list"></ul>
-
-    <h2>Add a Seva</h2>
-    <form id="seva-form" class="seva-form">
-      <input type="text" id="seva_name" placeholder="Seva Name" required>
-      <input type="text" id="time_slot" placeholder="Time Slot" required>
-      <input type="date" id="date_slot" placeholder="Date Slot" required> <!-- Added date slot -->
-      <textarea id="description" placeholder="Description"></textarea>
-      <button type="submit">Add Seva</button>
-    </form>
-
-    <div id="message" class="message"></div>
+    <div class="profile">
+      <img id="profile-pic" src="https://via.placeholder.com/100" alt="Profile Picture">
+      <h2 id="user-name">Loading...</h2>
+      <p id="user-info">Welcome to the Telegram Mini App!</p>
+    </div>
+    <a href="#" class="button">Explore More</a>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const telegram = window.Telegram.WebApp;
+      const user = telegram.initDataUnsafe?.user || {}; // Safely access Telegram user data
+
+      const userNameElement = document.getElementById('user-name');
+      const userPicElement = document.getElementById('profile-pic');
+
+      if (user) {
+        userNameElement.textContent = user.first_name || "User";
+        userPicElement.src = user.photo_url || "https://via.placeholder.com/100";
+      }
+
+      // Optionally, expand the WebApp's viewport
+      telegram.expand();
+    });
+  </script>
 </body>
 </html>
-
