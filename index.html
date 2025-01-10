@@ -62,10 +62,10 @@
 
     .bead {
       position: absolute;
-      width: 60px;
-      height: 60px;
-      background: #f3f3f3;
-      border: 2px solid #ccc;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, #8B4513, #5a2e15);
+      border: 2px solid #D2691E;
       border-radius: 50%;
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
@@ -80,6 +80,16 @@
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
+    }
+
+    .bead[data-type="small"] {
+      width: 20px;
+      height: 20px;
+    }
+
+    .bead[data-type="large"] {
+      width: 60px;
+      height: 60px;
     }
 
     .upload {
@@ -117,10 +127,13 @@
     }
 
     .bead[data-index="0"] { top: 0; left: 50%; transform: translate(-50%, -50%); }
-    .bead[data-index="1"] { top: 15%; left: 85%; transform: translate(-50%, -50%); }
+    .bead[data-index="1"][data-type="small"] { top: 15%; left: 75%; transform: translate(-50%, -50%); }
     .bead[data-index="2"] { top: 50%; left: 100%; transform: translate(-50%, -50%); }
-    .bead[data-index="3"] { top: 85%; left: 85%; transform: translate(-50%, -50%); }
+    .bead[data-index="3"][data-type="large"] { top: 85%; left: 75%; transform: translate(-50%, -50%); }
     .bead[data-index="4"] { top: 100%; left: 50%; transform: translate(-50%, -50%); }
+    .bead[data-index="5"][data-type="small"] { top: 85%; left: 25%; transform: translate(-50%, -50%); }
+    .bead[data-index="6"] { top: 50%; left: 0%; transform: translate(-50%, -50%); }
+    .bead[data-index="7"][data-type="large"] { top: 15%; left: 25%; transform: translate(-50%, -50%); }
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -132,10 +145,13 @@
     </div>
     <div class="mala" id="mala">
       <div class="bead" data-index="0"></div>
-      <div class="bead" data-index="1"></div>
+      <div class="bead" data-index="1" data-type="small"></div>
       <div class="bead" data-index="2"></div>
-      <div class="bead" data-index="3"></div>
+      <div class="bead" data-index="3" data-type="large"></div>
       <div class="bead" data-index="4"></div>
+      <div class="bead" data-index="5" data-type="small"></div>
+      <div class="bead" data-index="6"></div>
+      <div class="bead" data-index="7" data-type="large"></div>
     </div>
     <div class="upload">
       <input type="file" id="upload-input" multiple accept="image/*">
