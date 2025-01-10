@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telegram Mini App</title>
+  <title>RKC 2025 Mini App</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <style>
     * {
       margin: 0;
@@ -20,7 +19,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      margin: 20px;
+      overflow: hidden;
     }
 
     .container {
@@ -31,6 +30,47 @@
       border-radius: 16px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
       text-align: center;
+      position: relative;
+    }
+
+    .mala {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 300px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      animation: rotate 10s linear infinite;
+    }
+
+    .bead {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #8B4513; /* Brown beads */
+      border: 2px solid #D2691E; /* Lighter accent */
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Positioning beads in a circular path */
+    .bead:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); }
+    .bead:nth-child(2) { top: 15%; left: 85%; transform: translate(-50%, -50%); }
+    .bead:nth-child(3) { top: 50%; left: 100%; transform: translate(-50%, -50%); }
+    .bead:nth-child(4) { top: 85%; left: 85%; transform: translate(-50%, -50%); }
+    .bead:nth-child(5) { top: 100%; left: 50%; transform: translate(-50%, -50%); }
+    .bead:nth-child(6) { top: 85%; left: 15%; transform: translate(-50%, -50%); }
+    .bead:nth-child(7) { top: 50%; left: 0; transform: translate(-50%, -50%); }
+    .bead:nth-child(8) { top: 15%; left: 15%; transform: translate(-50%, -50%); }
+
+    @keyframes rotate {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
     }
 
     .profile {
@@ -42,17 +82,23 @@
       height: 100px;
       border-radius: 50%;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 1;
     }
 
     .profile h2 {
       margin-top: 15px;
       font-size: 24px;
       color: #333;
+      position: relative;
+      z-index: 1;
     }
 
     .profile p {
       font-size: 16px;
       color: #555;
+      position: relative;
+      z-index: 1;
     }
 
     .button {
@@ -67,6 +113,8 @@
       cursor: pointer;
       text-decoration: none;
       transition: background-color 0.3s;
+      position: relative;
+      z-index: 1;
     }
 
     .button:hover {
@@ -77,11 +125,26 @@
 </head>
 <body>
   <div class="container">
+    <!-- Rotating Mala -->
+    <div class="mala">
+      <div class="bead"></div>
+      <div class="bead"></div>
+      <div class="bead"></div>
+      <div class="bead"></div>
+      <div class="bead"></div>
+      <div class="bead"></div>
+      <div class="bead"></div>
+      <div class="bead"></div>
+    </div>
+
+    <!-- Profile Section -->
     <div class="profile">
       <img id="profile-pic" src="https://via.placeholder.com/100" alt="Profile Picture">
       <h2 id="user-name">Loading...</h2>
-      <p id="user-info">Welcome to the Telegram Mini App!</p>
+      <p id="user-info">Welcome to RKC 2025!</p>
     </div>
+
+    <!-- Explore Button -->
     <a href="#" class="button">Explore More</a>
   </div>
 
