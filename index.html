@@ -62,58 +62,48 @@
 
     .bead {
       position: absolute;
-      width: 30px;
-      height: 30px;
-      background: radial-gradient(circle, #8B4513, #5a2e15);
-      border: 2px solid #D2691E;
+      width: 60px;
+      height: 60px;
+      background: #f3f3f3;
+      border: 2px solid #ccc;
       border-radius: 50%;
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 12px;
-      color: #fff;
-      font-weight: bold;
+      overflow: hidden;
     }
 
-    .bead:hover {
-      transform: scale(1.2);
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-    }
-
-    .prompt {
-      position: absolute;
-      bottom: -100px;
-      width: 350px;
-      text-align: center;
-      display: none;
-      animation: fadeIn 0.5s forwards;
-    }
-
-    .prompt textarea {
+    .bead img {
       width: 100%;
-      height: 80px;
-      margin-top: 10px;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
 
-    .prompt button {
-      margin-top: 10px;
-      padding: 8px 12px;
-      font-size: 14px;
-      color: white;
+    .upload {
+      position: absolute;
+      bottom: -60px;
+      text-align: center;
+    }
+
+    .upload input {
+      display: none;
+    }
+
+    .upload label {
+      display: inline-block;
+      padding: 10px 20px;
       background-color: #007aff;
-      border: none;
+      color: white;
+      font-size: 14px;
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s;
     }
 
-    .prompt button:hover {
+    .upload label:hover {
       background-color: #005eb8;
     }
 
@@ -126,23 +116,11 @@
       }
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
     .bead[data-index="0"] { top: 0; left: 50%; transform: translate(-50%, -50%); }
     .bead[data-index="1"] { top: 15%; left: 85%; transform: translate(-50%, -50%); }
     .bead[data-index="2"] { top: 50%; left: 100%; transform: translate(-50%, -50%); }
     .bead[data-index="3"] { top: 85%; left: 85%; transform: translate(-50%, -50%); }
     .bead[data-index="4"] { top: 100%; left: 50%; transform: translate(-50%, -50%); }
-    .bead[data-index="5"] { top: 85%; left: 15%; transform: translate(-50%, -50%); }
-    .bead[data-index="6"] { top: 50%; left: 0; transform: translate(-50%, -50%); }
-    .bead[data-index="7"] { top: 15%; left: 15%; transform: translate(-50%, -50%); }
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -152,20 +130,16 @@
       <img id="profile-pic" src="https://via.placeholder.com/80" alt="Profile Picture">
       <h2 id="user-name">Your Name</h2>
     </div>
-    <div class="mala">
-      <div class="bead" data-index="0" title="January">Jan</div>
-      <div class="bead" data-index="1" title="February">Feb</div>
-      <div class="bead" data-index="2" title="March">Mar</div>
-      <div class="bead" data-index="3" title="April">Apr</div>
-      <div class="bead" data-index="4" title="May">May</div>
-      <div class="bead" data-index="5" title="June">Jun</div>
-      <div class="bead" data-index="6" title="July">Jul</div>
-      <div class="bead" data-index="7" title="August">Aug</div>
+    <div class="mala" id="mala">
+      <div class="bead" data-index="0"></div>
+      <div class="bead" data-index="1"></div>
+      <div class="bead" data-index="2"></div>
+      <div class="bead" data-index="3"></div>
+      <div class="bead" data-index="4"></div>
     </div>
-    <div class="prompt" id="reflectionPrompt">
-      <p id="promptText">What made this month special?</p>
-      <textarea id="reflectionInput" placeholder="Write your reflection here..."></textarea>
-      <button id="saveReflection">Save Reflection</button>
+    <div class="upload">
+      <input type="file" id="upload-input" multiple accept="image/*">
+      <label for="upload-input">Upload Pictures</label>
     </div>
   </div>
 
@@ -182,23 +156,24 @@
         profilePicElement.src = user.photo_url || "https://via.placeholder.com/80";
       }
 
-      const beads = document.querySelectorAll('.bead');
-      const prompt = document.getElementById('reflectionPrompt');
-      const promptText = document.getElementById('promptText');
-      const reflectionInput = document.getElementById('reflectionInput');
+      const uploadInput = document.getElementById('upload-input');
+      const mala = document.getElementById('mala');
 
-      beads.forEach((bead, index) => {
-        bead.addEventListener('click', () => {
-          const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August"];
-          prompt.style.display = 'block';
-          promptText.textContent = `Reflect on ${monthNames[index]}`;
+      uploadInput.addEventListener('change', (event) => {
+        const files = Array.from(event.target.files).slice(0, 5); // Limit to 5 files
+        const beads = mala.querySelectorAll('.bead');
+
+        beads.forEach((bead, index) => {
+          if (files[index]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              bead.innerHTML = `<img src="${e.target.result}" alt="Picture">`;
+            };
+            reader.readAsDataURL(files[index]);
+          } else {
+            bead.innerHTML = '';
+          }
         });
-      });
-
-      document.getElementById('saveReflection').addEventListener('click', () => {
-        alert(`Reflection saved: ${reflectionInput.value}`);
-        reflectionInput.value = '';
-        prompt.style.display = 'none';
       });
 
       telegram.expand();
